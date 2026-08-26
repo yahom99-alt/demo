@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personal Trainer Dashboard - Blue Sky Theme</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        skyBg: '#F0F9FF',
+                        skyCard: 'rgba(255, 255, 255, 0.88)',
+                        sidebarBg: '#0C2340',
+                        skyBorder: 'rgba(186, 230, 253, 0.6)',
+                        accentSky: '#0EA5E9',
+                        accentBlue: '#0284C7',
+                        accentDeepBlue: '#1E3A8A',
+                        accentCyan: '#06B6D4',
+                        accentPurple: '#7C3AED',
+                        accentGreen: '#10B981',
+                        accentOrange: '#F97316',
+                        accentRed: '#EF4444',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #E0F2FE 0%, #F0F9FF 50%, #E0F2FE 100%);
+            color: #0F172A;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(186, 230, 253, 0.8);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px -5px rgba(14, 165, 233, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(14, 165, 233, 0.5);
+            box-shadow: 0 14px 35px -5px rgba(14, 165, 233, 0.18), 0 6px 8px -2px rgba(0, 0, 0, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .active-nav-item {
+            background: linear-gradient(90deg, rgba(14, 165, 233, 0.25) 0%, rgba(14, 165, 233, 0.05) 100%);
+            border-left: 4px solid #38BDF8;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+
+        .pulse-dot {
+            animation: pulse-glow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.8)); }
+            50% { transform: scale(1.25); opacity: 0.7; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 1)); }
+            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.8)); }
+        }
+
+        /* Shimmer beam effect for progress bars */
+        @keyframes shimmer-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        .animate-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .animate-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shimmer-move 2.5s infinite;
+        }
+
+        /* Water wave animation inside Hydration bar */
+        @keyframes wave-flow {
+            0% { background-position-x: 0px; }
+            100% { background-position-x: 40px; }
+        }
+        .water-wave-bar {
+            background-image: repeating-linear-gradient(45deg, #0EA5E9, #0EA5E9 10px, #38BDF8 10px, #38BDF8 20px);
+            background-size: 40px 40px;
+            animation: wave-flow 1.5s linear infinite;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E0F2FE;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #93C5FD;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased selection:bg-sky-400 selection:text-white">
+
+    <!-- LEFT SIDEBAR (Deep Sky Navy for Strong Contrast) -->
+    <aside class="w-full md:w-64 bg-sidebarBg border-r border-sky-900/40 p-5 flex flex-col justify-between shrink-0 shadow-xl z-20">
+        <div>
+            <!-- Logo Header -->
+            <div class="flex items-center gap-3 px-2 py-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/40 animate-pulse">
+                    <i class="fa-solid fa-cloud-bolt text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-white leading-tight tracking-wide text-sm">BLUE SKY</h1>
+                    <span class="text-xs font-semibold text-sky-400 tracking-wider">AI TRAINER</span>
+                </div>
+            </div>
+
+            <!-- Main Navigation Links -->
+            <nav class="space-y-1.5">
+                <a href="#" class="active-nav-item flex items-center gap-3.5 px-4 py-3 rounded-r-xl text-sm font-semibold transition-all">
+                    <i class="fa-solid fa-border-all text-sky-400 w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-solid fa-dumbbell text-sky-300/70 w-5"></i>
+                    <span>Workout</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-solid fa-apple-whole text-sky-300/70 w-5"></i>
+                    <span>Nutrition</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-chart-line text-sky-300/70 w-5"></i>
+                    <span>Progress</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-solid fa-heart-pulse text-sky-300/70 w-5"></i>
+                    <span>Recovery</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-solid fa-robot text-sky-300/70 w-5"></i>
+                    <span>AI Coach</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-regular fa-calendar-days text-sky-300/70 w-5"></i>
+                    <span>Calendar</span>
+                </a>
+                <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sky-200/70 hover:text-white hover:bg-sky-800/40 text-sm font-medium transition-all">
+                    <i class="fa-solid fa-gear text-sky-300/70 w-5"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Goal Donut with Live Canvas Motion -->
+        <div class="bg-sky-950/60 rounded-2xl p-4 mt-6 border border-sky-800/50 text-center relative overflow-hidden backdrop-blur-md">
+            <h3 class="text-xs font-semibold text-sky-200 mb-2">Today's Goal</h3>
+            <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+                <canvas id="sidebarGoalCanvas" class="w-full h-full block"></canvas>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span class="text-xl font-bold text-white tracking-tight" id="sidebar-goal-percent">75%</span>
+                    <span class="text-[10px] text-sky-300">Completed</span>
+                </div>
+            </div>
+            <p class="text-[11px] text-sky-300/80 mt-2 leading-tight">Keep going! You're closer than you think.</p>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 p-4 md:p-8 space-y-6 overflow-y-auto">
+        
+        <!-- TOP HEADER -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                    Hi, Alex! <span class="animate-bounce inline-block">☀️</span>
+                </h2>
+                <p class="text-sm text-slate-600 mt-0.5">Let me help you reach your sky-high targets today.</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Date Badge -->
+                <div class="flex items-center gap-2 px-3.5 py-2 glass-card rounded-xl text-xs font-semibold text-sky-900 border border-sky-200/80 hover:bg-sky-100/50 cursor-pointer transition-all">
+                    <i class="fa-regular fa-calendar text-sky-500"></i>
+                    <span id="current-date-text">May 24, 2025</span>
+                </div>
+
+                <!-- User Profile -->
+                <div class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" 
+                             alt="User Avatar" 
+                             class="w-10 h-10 rounded-full object-cover border-2 border-sky-300 group-hover:border-sky-500 transition-all shadow-md">
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full animate-ping"></span>
+                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-xs text-slate-500 group-hover:text-slate-800 transition-colors"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- GRID CONTAINER: 3 Columns Desktop, 1 Column Mobile -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <!-- CARD 1: HEART RATE (Dynamic Live ECG Waveform Stream) -->
+            <div class="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-500">
+                                <i class="fa-solid fa-heart pulse-dot"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-500 tracking-wider uppercase">Heart Rate</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <span class="text-3xl font-bold text-slate-900 tracking-tight" id="live-bpm">128</span>
+                        <span class="text-xs text-slate-500 font-medium">BPM</span>
+                        <span class="ml-2 px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-700 text-xs font-semibold border border-sky-500/20 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping"></span>
+                            Moderate
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Live Animated Heartbeat Canvas Graph -->
+                <div class="relative mt-4 h-36 w-full">
+                    <!-- Y-Axis Ticks -->
+                    <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[9px] text-slate-400 pointer-events-none z-10 font-mono">
+                        <span>180</span>
+                        <span>135</span>
+                        <span>90</span>
+                        <span>45</span>
+                    </div>
+                    <!-- Timeline Ticks -->
+                    <div class="absolute left-6 right-0 bottom-0 flex justify-between text-[9px] text-slate-400 pointer-events-none z-10 font-mono">
+                        <span>00:00</span>
+                        <span>12:00</span>
+                        <span>24:00</span>
+                    </div>
+
+                    <canvas id="heartRateCanvas" class="w-full h-full block pl-6 pb-4"></canvas>
+                    
+                    <!-- Floating Live Reticle Tooltip -->
+                    <div id="hr-tooltip" class="absolute top-2 right-2 bg-slate-900 border border-rose-400/40 text-[10px] px-2.5 py-1 rounded-md text-slate-200 shadow-lg backdrop-blur-md flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                        <span class="font-bold text-white" id="hr-tooltip-bpm">128 bpm</span>
+                        <span class="text-slate-400" id="hr-tooltip-time">10:45 AM</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 2: CALORIES (Dynamic Equalizer Bar Motion & Rising Energy Particles) -->
+            <div class="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-9 h-9 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-600">
+                            <i class="fa-solid fa-fire text-sm animate-bounce"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-500 tracking-wider uppercase">Calories</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <span class="text-3xl font-bold text-slate-900 tracking-tight" id="live-calories">642</span>
+                        <span class="text-xs text-slate-500 font-medium">kcal</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Active Calories Burned</p>
+                </div>
+
+                <!-- Dynamic Bar Chart Canvas -->
+                <div class="relative mt-4 h-36 w-full flex items-end justify-between px-1">
+                    <!-- Y-Axis markers -->
+                    <div class="absolute left-0 top-0 bottom-4 flex flex-col justify-between text-[9px] text-slate-400 font-mono pointer-events-none">
+                        <span>1000</span>
+                        <span>750</span>
+                        <span>500</span>
+                        <span>250</span>
+                        <span>0</span>
+                    </div>
+                    <canvas id="caloriesCanvas" class="w-full h-full block pl-7"></canvas>
+                </div>
+            </div>
+
+            <!-- CARD 3: WORKOUT PROGRESS (Live Rotating Laser Donut Arc) -->
+            <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600">
+                            <i class="fa-solid fa-chart-pie text-sm"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-500 tracking-wider uppercase">Workout Progress</span>
+                    </div>
+                    <button class="text-slate-400 hover:text-slate-700 transition-colors text-xs">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between my-2 gap-4">
+                    <!-- Progress Donut Circle Canvas with laser tracer -->
+                    <div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center">
+                        <canvas id="workoutProgressCanvas" class="w-full h-full block"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span class="text-2xl font-bold text-slate-900">73<span class="text-sm font-normal">%</span></span>
+                            <span class="text-[10px] text-slate-500">Completed</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Stats Legend -->
+                    <div class="space-y-3 flex-1">
+                        <div>
+                            <p class="text-[11px] text-slate-500">This Week</p>
+                            <p class="text-sm font-bold text-slate-900"><span class="text-indigo-600" id="week-workout-val">4</span> / 6 <span class="text-xs font-normal text-slate-500">Workouts</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-500">This Month</p>
+                            <p class="text-sm font-bold text-slate-900"><span class="text-indigo-600">16</span> / 20 <span class="text-xs font-normal text-slate-500">Workouts</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-500">Streak</p>
+                            <p class="text-sm font-bold text-slate-900"><span class="text-indigo-600">12</span> <span class="text-xs font-normal text-slate-500">Days</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 4: RECOVERY (Fluid Floating Wave & Pulsing Radar Nodes) -->
+            <div class="glass-card rounded-2xl p-5 relative flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600">
+                                <i class="fa-solid fa-leaf text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-500 tracking-wider uppercase">Recovery</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <span class="text-3xl font-bold text-slate-900 tracking-tight" id="live-recovery-val">82</span>
+                        <span class="text-xs text-slate-500 font-medium">%</span>
+                        <span class="ml-2 text-xs font-bold text-emerald-600 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-trend-up text-[10px]"></i> Good Recovery
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Recovery Spline Canvas -->
+                <div class="relative mt-4 h-36 w-full">
+                    <div class="absolute left-0 top-0 bottom-4 flex flex-col justify-between text-[9px] text-slate-400 font-mono pointer-events-none">
+                        <span>100</span>
+                        <span>75</span>
+                        <span>50</span>
+                        <span>25</span>
+                        <span>0</span>
+                    </div>
+                    <canvas id="recoveryCanvas" class="w-full h-full block pl-6"></canvas>
+                </div>
+            </div>
+
+            <!-- CARD 5: TRAINING ZONE (Live Orbit Beam Ring & Dynamic Counter) -->
+            <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-9 h-9 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-600">
+                        <i class="fa-solid fa-bullseye text-sm"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500 tracking-wider uppercase">Training Zone</span>
+                </div>
+
+                <div class="flex items-center justify-between my-1 gap-2">
+                    <!-- Segmented Donut Chart -->
+                    <div class="relative w-36 h-36 flex-shrink-0 flex items-center justify-center">
+                        <canvas id="trainingZoneCanvas" class="w-full h-full block"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                            <span class="text-[9px] uppercase tracking-wider text-slate-500 font-semibold">Time in Zone</span>
+                            <span class="text-lg font-bold text-slate-900 tracking-tight font-mono" id="zone-timer">45:20</span>
+                            <span class="text-[10px] text-slate-500">min</span>
+                        </div>
+                    </div>
+
+                    <!-- Zone Metrics Breakdown with Continuous Live Updates -->
+                    <div class="space-y-1.5 text-[11px] flex-1 pl-2">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-rose-500"></span> Zone 5</span>
+                            <span class="text-slate-500">5%</span>
+                            <span class="text-slate-600 font-mono" id="z5-time">02:15</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-amber-500"></span> Zone 4</span>
+                            <span class="text-slate-500">15%</span>
+                            <span class="text-slate-600 font-mono" id="z4-time">08:45</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-emerald-500"></span> Zone 3</span>
+                            <span class="text-slate-500">35%</span>
+                            <span class="text-sky-700 font-mono font-bold" id="z3-time">15:45</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-blue-500"></span> Zone 2</span>
+                            <span class="text-slate-500">30%</span>
+                            <span class="text-slate-600 font-mono" id="z2-time">13:30</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-sky-400"></span> Zone 1</span>
+                            <span class="text-slate-500">15%</span>
+                            <span class="text-slate-600 font-mono" id="z1-time">06:45</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 6: AI RECOMMENDATION (3D Wireframe Hologram & Laser Scanner) -->
+            <div class="glass-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden border border-sky-300/60">
+                <div class="flex items-center justify-between z-10">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sky-600 text-sm animate-pulse"></i>
+                        <span class="text-xs font-bold text-slate-700 tracking-wider uppercase">AI Recommendation</span>
+                    </div>
+                    <button class="px-2.5 py-1 text-[10px] font-semibold rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors">View All</button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 my-3 z-10 items-center">
+                    <!-- Dynamic 3D/Canvas Futuristic Hologram Body Rendering -->
+                    <div class="relative h-44 w-full flex items-center justify-center">
+                        <canvas id="aiHologramCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <!-- Recommended Plan Box -->
+                    <div class="space-y-2">
+                        <p class="text-[11px] text-slate-600 leading-snug">Based on recovery and high sky energy today:</p>
+                        
+                        <div class="bg-gradient-to-br from-sky-50 to-blue-50/80 border border-sky-200 rounded-xl p-3 shadow-sm hover:border-sky-400 transition-all">
+                            <div class="flex items-center gap-2 text-sky-900 font-bold text-xs mb-1">
+                                <i class="fa-solid fa-dumbbell text-sky-600"></i>
+                                <span>Strength Training</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mb-2">Upper Body Focus</p>
+
+                            <div class="space-y-1 text-[10px] text-slate-700">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">● Duration</span>
+                                    <span class="font-bold">45 min</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">● Intensity</span>
+                                    <span class="font-bold text-sky-600">Moderate</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">● Focus Area</span>
+                                    <span class="font-semibold text-slate-800">Chest, Back, Arms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <button class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-500/30 transition-all z-10 group">
+                    <span>Start Workout</span>
+                    <i class="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM STATS BAR: 4 Mini Metric Cards with Dynamic Animations -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+
+            <!-- Stat 1: Sleep -->
+            <div class="glass-card rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 shrink-0">
+                    <i class="fa-solid fa-moon text-base animate-pulse"></i>
+                </div>
+                <div>
+                    <span class="text-[11px] text-slate-500 block">Sleep Last Night</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-lg font-bold text-slate-900">7h 45m</span>
+                        <span class="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Good
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat 2: Hydration (Fluid Water Bar Animation) -->
+            <div class="glass-card rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-600 shrink-0">
+                    <i class="fa-solid fa-droplet text-base animate-bounce"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 mb-1">
+                        <span>Hydration</span>
+                        <span>Goal: 3.0 L</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="text-lg font-bold text-slate-900" id="hydration-val">2.3 L</span>
+                    </div>
+                    <div class="w-full bg-sky-100 h-2 rounded-full overflow-hidden">
+                        <div class="water-wave-bar h-full rounded-full transition-all duration-300" style="width: 76.6%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat 3: Steps (Real-time Walking Counter & Shimmer Beam) -->
+            <div class="glass-card rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 shrink-0">
+                    <i class="fa-solid fa-shoe-prints text-base animate-pulse"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 mb-1">
+                        <span>Steps</span>
+                        <span>Goal: 10,000</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="text-lg font-bold text-slate-900 font-mono" id="step-count">8,752</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden animate-shimmer">
+                        <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" id="step-progress-bar" style="width: 87.5%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat 4: Body Battery (Breathing Charging Glow) -->
+            <div class="glass-card rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-600 shrink-0 relative">
+                    <i class="fa-solid fa-bolt text-base text-amber-500 animate-pulse"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 mb-1">
+                        <span>Body Battery</span>
+                        <span class="text-emerald-600 font-bold">Good</span>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-1">
+                        <span class="text-lg font-bold text-slate-900 font-mono" id="battery-val">78</span>
+                        <span class="text-xs text-slate-500">/100</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden animate-shimmer">
+                        <div class="bg-gradient-to-r from-sky-400 to-blue-600 h-full rounded-full transition-all duration-500" style="width: 78%;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        window.onload = function() {
+            initSidebarGoalCanvas();
+            initHeartRateCanvas();
+            initCaloriesCanvas();
+            initWorkoutProgressCanvas();
+            initRecoveryCanvas();
+            initTrainingZoneCanvas();
+            initAIHologramCanvas();
+            initLiveCounters();
+        };
+
+        /* 0. SIDEBAR GOAL CANVAS (Continuous Rotating Arc Glow) */
+        function initSidebarGoalCanvas() {
+            const canvas = document.getElementById('sidebarGoalCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = 112;
+            canvas.height = 112;
+
+            let angleOffset = 0;
+
+            function drawGoal() {
+                angleOffset += 0.03;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const radius = 44;
+
+                // Track ring
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = '#1E3A5F';
+                ctx.lineWidth = 7;
+                ctx.stroke();
+
+                // Animated progress gradient ring (75%)
+                const startAngle = -Math.PI / 2;
+                const endAngle = startAngle + (Math.PI * 2 * 0.75);
+
+                const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                grad.addColorStop(0, '#38BDF8');
+                grad.addColorStop(1, '#818CF8');
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 8;
+                ctx.lineCap = 'round';
+                ctx.shadowColor = '#38BDF8';
+                ctx.shadowBlur = 10;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Orbiting particle tip
+                const orbX = cx + radius * Math.cos(endAngle);
+                const orbY = cy + radius * Math.sin(endAngle);
+
+                ctx.beginPath();
+                ctx.arc(orbX, orbY, 5 + Math.sin(angleOffset * 2) * 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = '#38BDF8';
+                ctx.shadowBlur = 12;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                requestAnimationFrame(drawGoal);
+            }
+            drawGoal();
+        }
+
+        /* 1. HEART RATE CANVAS (Continuous Stream ECG Waveform) */
+        function initHeartRateCanvas() {
+            const canvas = document.getElementById('heartRateCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth - 24;
+                canvas.height = canvas.parentElement.clientHeight - 16;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const pointsCount = 60;
+            let ecgData = [];
+            let timeStep = 0;
+
+            for (let i = 0; i < pointsCount; i++) {
+                ecgData.push(110);
+            }
+
+            function drawECG() {
+                timeStep += 1;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const w = canvas.width;
+                const h = canvas.height;
+                const stepX = w / (pointsCount - 1);
+
+                let newVal = 110 + Math.sin(timeStep * 0.15) * 8 + (Math.random() - 0.5) * 4;
+                const beatMod = timeStep % 28;
+                if (beatMod === 0) newVal -= 12;
+                else if (beatMod === 3) newVal += 5;
+                else if (beatMod === 6) newVal -= 55;
+                else if (beatMod === 8) newVal += 70;
+                else if (beatMod === 10) newVal -= 25;
+                else if (beatMod === 14) newVal -= 15;
+
+                ecgData.push(newVal);
+                ecgData.shift();
+
+                // Draw Grid Lines (moving subtly left)
+                ctx.strokeStyle = 'rgba(14, 165, 233, 0.12)';
+                ctx.lineWidth = 1;
+                const gridOffset = (timeStep * 1.5) % 20;
+                for (let x = -gridOffset; x < w; x += 20) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, h);
+                    ctx.stroke();
+                }
+
+                // Fill Area Under Line
+                const gradient = ctx.createLinearGradient(0, 0, 0, h);
+                gradient.addColorStop(0, 'rgba(244, 63, 94, 0.25)');
+                gradient.addColorStop(1, 'rgba(244, 63, 94, 0.0)');
+
+                ctx.beginPath();
+                ctx.moveTo(0, h);
+                for (let i = 0; i < pointsCount; i++) {
+                    const x = i * stepX;
+                    const y = (ecgData[i] / 180) * h;
+                    if (i === 0) ctx.lineTo(x, y);
+                    else {
+                        const prevX = (i - 1) * stepX;
+                        const prevY = (ecgData[i - 1] / 180) * h;
+                        const cx = (prevX + x) / 2;
+                        const cy = (prevY + y) / 2;
+                        ctx.quadraticCurveTo(prevX, prevY, cx, cy);
+                    }
+                }
+                ctx.lineTo(w, h);
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // Draw ECG Line Path
+                ctx.beginPath();
+                for (let i = 0; i < pointsCount; i++) {
+                    const x = i * stepX;
+                    const y = (ecgData[i] / 180) * h;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else {
+                        const prevX = (i - 1) * stepX;
+                        const prevY = (ecgData[i - 1] / 180) * h;
+                        const cx = (prevX + x) / 2;
+                        const cy = (prevY + y) / 2;
+                        ctx.quadraticCurveTo(prevX, prevY, cx, cy);
+                    }
+                }
+                ctx.strokeStyle = '#F43F5E';
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = 'rgba(244, 63, 94, 0.5)';
+                ctx.shadowBlur = 6;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Glowing Active Tip
+                const lastX = w;
+                const lastY = (ecgData[ecgData.length - 1] / 180) * h;
+
+                ctx.beginPath();
+                ctx.arc(lastX - 2, lastY, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#F43F5E';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(lastX - 2, lastY, 8 + Math.sin(timeStep * 0.2) * 3, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(244, 63, 94, 0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                if (timeStep % 30 === 0) {
+                    const liveBpm = Math.floor(126 + Math.random() * 5);
+                    document.getElementById('live-bpm').innerText = liveBpm;
+                    document.getElementById('hr-tooltip-bpm').innerText = liveBpm + ' bpm';
+                }
+
+                requestAnimationFrame(drawECG);
+            }
+            drawECG();
+        }
+
+        /* 2. CALORIES CANVAS (Equalizer Motion & Sparks) */
+        function initCaloriesCanvas() {
+            const canvas = document.getElementById('caloriesCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth - 28;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const baseHeights = [450, 600, 520, 720, 610, 840, 580];
+            let particles = [];
+            let animTick = 0;
+
+            function drawCalories() {
+                animTick += 0.05;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const w = canvas.width;
+                const h = canvas.height;
+                const barWidth = Math.min(22, w / 12);
+                const gap = (w - (barWidth * 7)) / 8;
+
+                if (Math.random() < 0.3) {
+                    const satX = gap + 5 * (barWidth + gap) + barWidth / 2;
+                    particles.push({
+                        x: satX + (Math.random() - 0.5) * barWidth,
+                        y: h - 35 - (baseHeights[5] / 1000) * (h - 45),
+                        vy: -Math.random() * 1.5 - 0.5,
+                        size: Math.random() * 2.5 + 1,
+                        alpha: 1
+                    });
+                }
+
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.y += p.vy;
+                    p.alpha -= 0.02;
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(14, 165, 233, ${p.alpha})`;
+                    ctx.shadowColor = '#0EA5E9';
+                    ctx.shadowBlur = 4;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+
+                for (let i = 0; i < 7; i++) {
+                    const dynamicOffset = Math.sin(animTick * 2 + i) * 15;
+                    const val = baseHeights[i] + dynamicOffset;
+                    const barH = (val / 1000) * (h - 45);
+                    const x = gap + i * (barWidth + gap);
+                    const y = h - 22 - barH;
+
+                    const isSat = (i === 5);
+                    const gradient = ctx.createLinearGradient(0, y, 0, y + barH);
+                    
+                    if (isSat) {
+                        gradient.addColorStop(0, '#0EA5E9');
+                        gradient.addColorStop(1, '#0284C7');
+                    } else {
+                        gradient.addColorStop(0, '#38BDF8');
+                        gradient.addColorStop(1, '#60A5FA');
+                    }
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, barWidth, barH, [6, 6, 0, 0]);
+                    ctx.fill();
+
+                    if (isSat) {
+                        const satTooltipY = y - 24 + Math.sin(animTick * 3) * 2;
+                        ctx.fillStyle = '#0284C7';
+                        ctx.shadowColor = 'rgba(2, 132, 199, 0.3)';
+                        ctx.shadowBlur = 6;
+                        ctx.beginPath();
+                        ctx.roundRect(x - 12, satTooltipY, 44, 18, 5);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.font = 'bold 9px Inter';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('642 kcal', x + barWidth / 2, satTooltipY + 12);
+                    }
+
+                    ctx.fillStyle = isSat ? '#0284C7' : '#64748B';
+                    ctx.font = isSat ? 'bold 10px Inter' : '10px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(days[i], x + barWidth / 2, h - 5);
+                }
+
+                if (Math.floor(animTick * 10) % 40 === 0) {
+                    const liveCal = 640 + Math.floor(Math.sin(animTick) * 5);
+                    document.getElementById('live-calories').innerText = liveCal;
+                }
+
+                requestAnimationFrame(drawCalories);
+            }
+            drawCalories();
+        }
+
+        /* 3. WORKOUT PROGRESS CANVAS (Laser Arc Beam Orbit) */
+        function initWorkoutProgressCanvas() {
+            const canvas = document.getElementById('workoutProgressCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = 128;
+            canvas.height = 128;
+
+            let beamAngle = 0;
+
+            function drawProgress() {
+                beamAngle += 0.04;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const radius = 50;
+
+                // Track ring
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = '#E2E8F0';
+                ctx.lineWidth = 8;
+                ctx.stroke();
+
+                // Progress ring (73%)
+                const startAngle = -Math.PI / 2;
+                const endAngle = startAngle + (Math.PI * 2 * 0.73);
+
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#0EA5E9');
+                gradient.addColorStop(1, '#6366F1');
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 9;
+                ctx.lineCap = 'round';
+                ctx.shadowColor = 'rgba(14, 165, 233, 0.4)';
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Orbiting Laser Bead tracer running along arc
+                const currentOrbAngle = startAngle + ((beamAngle % (Math.PI * 2 * 0.73)));
+                const lx = cx + radius * Math.cos(currentOrbAngle);
+                const ly = cy + radius * Math.sin(currentOrbAngle);
+
+                ctx.beginPath();
+                ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#0284C7';
+                ctx.shadowColor = '#0EA5E9';
+                ctx.shadowBlur = 8;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                requestAnimationFrame(drawProgress);
+            }
+            drawProgress();
+        }
+
+        /* 4. RECOVERY CANVAS (Fluid Wave Motion & Radar Pulse Nodes) */
+        function initRecoveryCanvas() {
+            const canvas = document.getElementById('recoveryCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth - 24;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const baseValues = [55, 72, 65, 80, 75, 78, 82];
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            let wavePhase = 0;
+
+            function drawRecovery() {
+                wavePhase += 0.04;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const w = canvas.width;
+                const h = canvas.height;
+                const stepX = w / 6;
+
+                const points = baseValues.map((val, i) => {
+                    const fluidVal = val + Math.sin(wavePhase * 1.5 + i * 0.8) * 3.5;
+                    return {
+                        x: i * stepX,
+                        y: (h - 25) - (fluidVal / 100) * (h - 45)
+                    };
+                });
+
+                // Area Gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, h);
+                gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+                gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+                ctx.beginPath();
+                ctx.moveTo(0, h - 20);
+
+                for (let i = 0; i < points.length; i++) {
+                    if (i === 0) ctx.lineTo(points[i].x, points[i].y);
+                    else {
+                        const cx = (points[i - 1].x + points[i].x) / 2;
+                        const cy = (points[i - 1].y + points[i].y) / 2;
+                        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, cx, cy);
+                    }
+                }
+                ctx.lineTo(w, h - 20);
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // Spline Line Path
+                ctx.beginPath();
+                for (let i = 0; i < points.length; i++) {
+                    if (i === 0) ctx.moveTo(points[i].x, points[i].y);
+                    else {
+                        const cx = (points[i - 1].x + points[i].x) / 2;
+                        const cy = (points[i - 1].y + points[i].y) / 2;
+                        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, cx, cy);
+                    }
+                }
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = 'rgba(16, 185, 129, 0.4)';
+                ctx.shadowBlur = 6;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                points.forEach((pt, i) => {
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#10B981';
+                    ctx.fill();
+
+                    if (i === points.length - 1) {
+                        const pulseR = 5 + ((wavePhase * 8) % 10);
+                        const pulseAlpha = 1 - (pulseR / 15);
+                        ctx.beginPath();
+                        ctx.arc(pt.x, pt.y, pulseR, 0, Math.PI * 2);
+                        ctx.strokeStyle = `rgba(16, 185, 129, ${pulseAlpha})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+
+                        const liveRecVal = Math.floor(82 + Math.sin(wavePhase) * 1.5);
+                        ctx.fillStyle = '#10B981';
+                        ctx.beginPath();
+                        ctx.roundRect(pt.x - 14, pt.y - 22, 28, 15, 4);
+                        ctx.fill();
+
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.font = 'bold 8px Inter';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(liveRecVal + '%', pt.x, pt.y - 11);
+
+                        document.getElementById('live-recovery-val').innerText = liveRecVal;
+                    }
+
+                    ctx.fillStyle = (i === points.length - 1) ? '#0D9488' : '#64748B';
+                    ctx.font = (i === points.length - 1) ? 'bold 10px Inter' : '10px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(days[i], pt.x, h - 4);
+                });
+
+                requestAnimationFrame(drawRecovery);
+            }
+            drawRecovery();
+        }
+
+        /* 5. TRAINING ZONE CANVAS (Orbit Laser Segment) */
+        function initTrainingZoneCanvas() {
+            const canvas = document.getElementById('trainingZoneCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = 144;
+            canvas.height = 144;
+
+            const zones = [
+                { percent: 0.05, color: '#F43F5E' }, // Zone 5
+                { percent: 0.15, color: '#F97316' }, // Zone 4
+                { percent: 0.35, color: '#10B981' }, // Zone 3 (Active)
+                { percent: 0.30, color: '#3B82F6' }, // Zone 2
+                { percent: 0.15, color: '#38BDF8' }, // Zone 1
+            ];
+
+            let orbitAngle = 0;
+
+            function drawZones() {
+                orbitAngle += 0.03;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                let startAngle = -Math.PI / 2;
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const radius = 56;
+                const strokeWidth = 13;
+
+                zones.forEach((zone, idx) => {
+                    const angle = zone.percent * Math.PI * 2;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, startAngle, startAngle + angle - 0.06);
+                    ctx.strokeStyle = zone.color;
+                    ctx.lineWidth = strokeWidth;
+                    ctx.lineCap = 'round';
+                    
+                    if (idx === 2) {
+                        ctx.shadowColor = zone.color;
+                        ctx.shadowBlur = 8;
+                    }
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    startAngle += angle;
+                });
+
+                const activeStart = -Math.PI / 2 + (0.20 * Math.PI * 2);
+                const activeEnd = activeStart + (0.35 * Math.PI * 2);
+                const currentLaserAngle = activeStart + ((orbitAngle % 1) * (activeEnd - activeStart));
+
+                const lx = cx + radius * Math.cos(currentLaserAngle);
+                const ly = cy + radius * Math.sin(currentLaserAngle);
+
+                ctx.beginPath();
+                ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = '#10B981';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                requestAnimationFrame(drawZones);
+            }
+            drawZones();
+        }
+
+        /* 6. AI HOLOGRAM CANVAS (3D Wireframe Body & Sky Laser Beam) */
+        function initAIHologramCanvas() {
+            const canvas = document.getElementById('aiHologramCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            let rotation = 0;
+            let scanY = 0;
+            let scanDir = 1;
+
+            const bodyNodes = [
+                {x: 0, y: 75, z: 0}, {x: 0, y: 65, z: 0},
+                {x: -25, y: 50, z: 0}, {x: 25, y: 50, z: 0},
+                {x: 0, y: 35, z: 10}, {x: 0, y: 35, z: -10},
+                {x: 0, y: 10, z: 0}, {x: -18, y: -5, z: 0}, {x: 18, y: -5, z: 0},
+                {x: -35, y: 25, z: 5}, {x: -40, y: 0, z: 10},
+                {x: 35, y: 25, z: 5}, {x: 40, y: 0, z: 10},
+                {x: -15, y: -35, z: 5}, {x: -15, y: -65, z: 0},
+                {x: 18, y: -35, z: 5}, {x: 18, y: -65, z: 0}
+            ];
+
+            const bodyConnections = [
+                [0,1], [1,2], [1,3], [2,3], [2,4], [3,4], [2,5], [3,5],
+                [4,6], [5,6], [6,7], [6,8], [7,8],
+                [2,9], [9,10], [3,11], [11,12],
+                [7,13], [13,14], [8,15], [15,16]
+            ];
+
+            function renderHologram() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                rotation += 0.018;
+
+                scanY += 1.5 * scanDir;
+                if (scanY > canvas.height) scanDir = -1;
+                if (scanY < 0) scanDir = 1;
+
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2 + 5;
+                const scale = 1.15;
+
+                const projected = bodyNodes.map(node => {
+                    const rx = node.x * Math.cos(rotation) - node.z * Math.sin(rotation);
+                    const rz = node.x * Math.sin(rotation) + node.z * Math.cos(rotation);
+                    
+                    const perspective = 300 / (300 + rz);
+                    return {
+                        x: cx + rx * perspective * scale,
+                        y: cy - node.y * perspective * scale,
+                        z: rz
+                    };
+                });
+
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.75)';
+                ctx.lineWidth = 1.5;
+                ctx.shadowColor = '#0EA5E9';
+                ctx.shadowBlur = 6;
+
+                bodyConnections.forEach(([i, j]) => {
+                    ctx.beginPath();
+                    ctx.moveTo(projected[i].x, projected[i].y);
+                    ctx.lineTo(projected[j].x, projected[j].y);
+                    ctx.stroke();
+                });
+
+                projected.forEach((p, idx) => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, (idx === 4 || idx === 2 || idx === 3) ? 3.5 : 2, 0, Math.PI * 2);
+                    ctx.fillStyle = (idx === 4 || idx === 2 || idx === 3) ? '#7C3AED' : '#0284C7';
+                    ctx.shadowColor = (idx === 4) ? '#7C3AED' : '#0EA5E9';
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+                });
+
+                ctx.shadowBlur = 0;
+
+                // Moving Laser Beam Scanner Overlay Line
+                ctx.strokeStyle = 'rgba(14, 165, 233, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.shadowColor = '#38BDF8';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.moveTo(cx - 50, scanY);
+                ctx.lineTo(cx + 50, scanY);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                requestAnimationFrame(renderHologram);
+            }
+            renderHologram();
+        }
+
+        /* 7. LIVE COUNTERS & TICKERS (Zone Timer & Incremental Step Counter) */
+        function initLiveCounters() {
+            let totalSecs = 45 * 60 + 20;
+
+            setInterval(() => {
+                totalSecs++;
+                const m = Math.floor(totalSecs / 60);
+                const s = totalSecs % 60;
+                const timerElem = document.getElementById('zone-timer');
+                if (timerElem) {
+                    timerElem.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                }
+
+                const z3Secs = 15 * 60 + 45 + (totalSecs - (45 * 60 + 20));
+                const z3m = Math.floor(z3Secs / 60);
+                const z3s = z3Secs % 60;
+                const z3Elem = document.getElementById('z3-time');
+                if (z3Elem) {
+                    z3Elem.innerText = `${z3m}:${z3s < 10 ? '0' : ''}${z3s}`;
+                }
+            }, 1000);
+
+            let steps = 8752;
+            setInterval(() => {
+                if (Math.random() < 0.4) {
+                    steps += Math.floor(Math.random() * 4) + 1;
+                    const stepElem = document.getElementById('step-count');
+                    if (stepElem) {
+                        stepElem.innerText = steps.toLocaleString();
+                        const pct = Math.min((steps / 10000) * 100, 100);
+                        document.getElementById('step-progress-bar').style.width = pct.toFixed(1) + '%';
+                    }
+                }
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
