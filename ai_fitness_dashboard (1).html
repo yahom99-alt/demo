@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness Dashboard - Dark Blue Sky Theme</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        darksky: {
+                            950: '#070c18',
+                            900: '#0c1527',
+                            850: '#101c33',
+                            800: '#152442',
+                            700: '#1e335a',
+                            600: '#2a487c',
+                            500: '#0284c7',
+                            400: '#38bdf8',
+                            300: '#7dd3fc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #060b14 0%, #0b1528 50%, #07101f 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(15, 25, 46, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-panel-active {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(2, 132, 199, 0.1) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        .pulse-heart {
+            animation: pulse-beat 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-beat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.22); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+        }
+
+        .glow-cyan {
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        }
+
+        /* Custom scrollbar for modern feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(11, 21, 40, 0.8);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e335a;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+
+        /* Muscle anatomical glow pulse for dark theme */
+        .muscle-highlight {
+            animation: muscle-pulse 2s infinite alternate ease-in-out;
+        }
+        @keyframes muscle-pulse {
+            0% { opacity: 0.5; filter: drop-shadow(0 0 3px #38bdf8); }
+            100% { opacity: 1; filter: drop-shadow(0 0 12px #38bdf8); }
+        }
+    </style>
+</head>
+<body class="p-2 sm:p-4 md:p-6 lg:p-8 antialiased selection:bg-sky-500 selection:text-white">
+
+    <div class="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-6">
+
+        <!-- MOBILE NAVBAR TOP HEADER (Shown only on small screens) -->
+        <div class="lg:hidden flex items-center justify-between glass-panel p-4 rounded-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-sky-500/30">
+                    <i class="fa-solid font-outfit text-2xl">A</i>
+                </div>
+                <div>
+                    <h1 class="font-outfit font-extrabold text-lg text-white leading-none tracking-wide">AI FITNESS</h1>
+                    <span class="text-xs text-sky-400 font-medium">Dark Blue Sky</span>
+                </div>
+            </div>
+            <button id="mobileMenuBtn" class="w-10 h-10 rounded-xl bg-slate-800 text-sky-400 border border-sky-500/20 flex items-center justify-center hover:bg-slate-700 transition">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+        </div>
+
+        <!-- LEFT SIDEBAR -->
+        <aside id="sidebar" class="hidden lg:flex flex-col justify-between w-full lg:w-64 glass-panel rounded-3xl p-5 min-h-[90vh] transition-all duration-300">
+            <div class="space-y-8">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 px-2">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-sky-500 to-cyan-400 flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-sky-500/40">
+                        <span class="font-outfit tracking-tighter">AI</span>
+                    </div>
+                    <div>
+                        <h1 class="font-outfit font-extrabold text-xl text-white tracking-wide">AI FITNESS</h1>
+                        <p class="text-[11px] text-sky-400 font-semibold tracking-wider uppercase">Pro Dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="space-y-1.5">
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-semibold text-sm transition-all glass-panel-active text-sky-400">
+                        <i class="fa-solid fa-border-all text-base text-sky-400"></i>
+                        <span class="text-white">Dashboard</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-medium text-sm text-slate-400 hover:bg-slate-800/60 hover:text-sky-300 transition-all">
+                        <i class="fa-solid fa-list-check text-base text-slate-500"></i>
+                        <span>Activity</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-medium text-sm text-slate-400 hover:bg-slate-800/60 hover:text-sky-300 transition-all">
+                        <i class="fa-solid fa-dumbbell text-base text-slate-500"></i>
+                        <span>Workouts</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-medium text-sm text-slate-400 hover:bg-slate-800/60 hover:text-sky-300 transition-all">
+                        <i class="fa-solid fa-chart-simple text-base text-slate-500"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-medium text-sm text-slate-400 hover:bg-slate-800/60 hover:text-sky-300 transition-all">
+                        <i class="fa-solid fa-apple-whole text-base text-slate-500"></i>
+                        <span>Nutrition</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-medium text-sm text-slate-400 hover:bg-slate-800/60 hover:text-sky-300 transition-all">
+                        <i class="fa-solid fa-clock-rotate-left text-base text-slate-500"></i>
+                        <span>Recovery</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-medium text-sm text-slate-400 hover:bg-slate-800/60 hover:text-sky-300 transition-all">
+                        <i class="fa-solid fa-gear text-base text-slate-500"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- User XP & Level Card -->
+            <div class="glass-panel p-4 rounded-2xl bg-slate-900/60 border border-sky-500/20 mt-6 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-20 h-20 bg-sky-500/10 rounded-full blur-xl"></div>
+                <div class="flex items-center justify-between mb-3 relative z-10">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="w-14 h-14 rounded-2xl object-cover border-2 border-sky-400/50 shadow-md">
+                        <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold tracking-wider text-sky-400 uppercase">LEVEL</span>
+                        <div class="font-outfit font-black text-3xl text-white leading-none" id="userLevel">32</div>
+                    </div>
+                </div>
+
+                <!-- XP Progress -->
+                <div class="space-y-1.5 mb-3">
+                    <div class="flex justify-between text-xs font-semibold text-slate-300">
+                        <span id="currentXP">12,450</span>
+                        <span class="text-sky-400">/ 20,000 XP</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-sky-500/20">
+                        <div id="xpBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 rounded-full transition-all duration-500" style="width: 62.25%;"></div>
+                    </div>
+                </div>
+
+                <!-- Day Streak -->
+                <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                    <div>
+                        <div class="font-outfit font-bold text-lg text-white leading-tight">7</div>
+                        <div class="text-[10px] uppercase font-bold text-sky-400 tracking-wider">Day Streak</div>
+                    </div>
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-fire text-lg animate-bounce"></i>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN DASHBOARD CONTENT AREA -->
+        <main class="flex-1 flex flex-col gap-6">
+
+            <!-- Top Header Bar -->
+            <header class="glass-panel rounded-3xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="font-outfit font-black text-2xl md:text-3xl text-white tracking-tight">AI FITNESS DASHBOARD</h1>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Sync
+                        </span>
+                    </div>
+                    <p class="text-xs md:text-sm font-medium text-slate-400 mt-0.5">Track. Analyze. Improve.</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Date Dropdown -->
+                    <div class="flex items-center gap-2 bg-slate-800/80 border border-sky-500/20 px-4 py-2 rounded-2xl shadow-sm hover:border-sky-400/50 transition cursor-pointer text-slate-200">
+                        <i class="fa-regular fa-calendar text-sky-400"></i>
+                        <span class="text-xs md:text-sm font-semibold" id="currentDateDisplay">May 26, 2026</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                    </div>
+
+                    <!-- Notification Bell -->
+                    <button class="w-10 h-10 rounded-2xl bg-slate-800/80 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:bg-slate-700 transition relative shadow-sm">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-sky-400 rounded-full ring-2 ring-slate-900"></span>
+                    </button>
+
+                    <!-- Profile Avatar -->
+                    <div class="flex items-center gap-3 pl-2 border-l border-slate-800">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-xs font-bold text-white">Alex Johnson</div>
+                            <div class="text-[10px] font-semibold text-sky-400">Pro Member</div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User Profile" class="w-10 h-10 rounded-2xl object-cover ring-2 ring-sky-400 shadow-sm">
+                    </div>
+                </div>
+            </header>
+
+            <!-- SECTION 1: 4 TOP METRIC CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- CARD 1: HEART RATE -->
+                <div class="glass-panel p-5 rounded-3xl relative overflow-hidden transition-all hover:shadow-xl hover:-translate-y-0.5 border-t-2 border-t-rose-500/60 bg-gradient-to-b from-rose-950/20 to-transparent">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center">
+                                <i class="fa-solid fa-heart pulse-heart text-base"></i>
+                            </div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Heart Rate</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="font-outfit font-black text-3xl text-white tracking-tight" id="valHeartRate">128</span>
+                        <span class="text-xs font-bold text-rose-400 uppercase">BPM</span>
+                    </div>
+                    <!-- Dynamic Live Sparkline Canvas -->
+                    <div class="h-14 w-full my-1">
+                        <canvas id="canvasHR" class="w-full h-full"></canvas>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs font-semibold text-rose-300 bg-rose-950/50 py-1 px-2.5 rounded-xl w-fit border border-rose-500/30">
+                        <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+                        <span>Zone 3 • Moderate</span>
+                    </div>
+                </div>
+
+                <!-- CARD 2: CALORIES -->
+                <div class="glass-panel p-5 rounded-3xl relative overflow-hidden transition-all hover:shadow-xl hover:-translate-y-0.5 border-t-2 border-t-amber-500/60 bg-gradient-to-b from-amber-950/20 to-transparent">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+                                <i class="fa-solid fa-fire text-base"></i>
+                            </div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Calories</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="font-outfit font-black text-3xl text-white tracking-tight" id="valCalories">645</span>
+                        <span class="text-xs font-bold text-amber-400 uppercase">kcal</span>
+                    </div>
+                    <!-- Dynamic Live Sparkline Canvas -->
+                    <div class="h-14 w-full my-1">
+                        <canvas id="canvasCal" class="w-full h-full"></canvas>
+                    </div>
+                    <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                        <i class="fa-solid fa-caret-up"></i>
+                        <span>12% vs yesterday</span>
+                    </div>
+                </div>
+
+                <!-- CARD 3: WORKOUT -->
+                <div class="glass-panel p-5 rounded-3xl relative overflow-hidden transition-all hover:shadow-xl hover:-translate-y-0.5 border-t-2 border-t-sky-500/60 bg-gradient-to-b from-sky-950/30 to-transparent">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center">
+                                <i class="fa-solid fa-dumbbell text-base"></i>
+                            </div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Workout</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="font-outfit font-black text-3xl text-white tracking-tight" id="valWorkout">65</span>
+                        <span class="text-xs font-bold text-sky-400 uppercase">min</span>
+                    </div>
+                    <!-- Dynamic Live Sparkline Canvas -->
+                    <div class="h-14 w-full my-1">
+                        <canvas id="canvasWorkout" class="w-full h-full"></canvas>
+                    </div>
+                    <div class="text-xs font-semibold text-sky-300">
+                        Strength Training
+                    </div>
+                </div>
+
+                <!-- CARD 4: PERFORMANCE -->
+                <div class="glass-panel p-5 rounded-3xl relative overflow-hidden transition-all hover:shadow-xl hover:-translate-y-0.5 border-t-2 border-t-indigo-500/60 bg-gradient-to-b from-indigo-950/30 to-transparent">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+                                <i class="fa-solid fa-arrow-trend-up text-base"></i>
+                            </div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Performance</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="font-outfit font-black text-3xl text-white tracking-tight" id="valPerf">87</span>
+                        <span class="text-xs font-bold text-indigo-400 uppercase">%</span>
+                    </div>
+                    <!-- Dynamic Live Sparkline Canvas -->
+                    <div class="h-14 w-full my-1">
+                        <canvas id="canvasPerf" class="w-full h-full"></canvas>
+                    </div>
+                    <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                        <i class="fa-solid fa-caret-up"></i>
+                        <span>8% vs last week</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION 2: ACTIVITY OVERVIEW & TODAY'S GOAL -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- ACTIVITY OVERVIEW (2 COLUMNS ON DESKTOP) -->
+                <div class="lg:col-span-2 glass-panel p-6 rounded-3xl flex flex-col justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h2 class="font-outfit font-extrabold text-lg text-white tracking-wide">ACTIVITY OVERVIEW</h2>
+                            <p class="text-xs font-medium text-sky-400">Real-time biometrics stream</p>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs font-semibold">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400/50"></span>
+                                <span class="text-slate-300">Heart Rate (bpm)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-indigo-500 shadow-sm shadow-indigo-500/50"></span>
+                                <span class="text-slate-300">Calories (kcal)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Dynamic Animated Canvas Chart -->
+                    <div class="relative w-full h-64 sm:h-72 my-2">
+                        <canvas id="mainActivityCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 pt-2 border-t border-slate-800">
+                        <span>00:00</span>
+                        <span>04:00</span>
+                        <span>08:00</span>
+                        <span>12:00</span>
+                        <span>16:00</span>
+                        <span>20:00</span>
+                        <span>24:00</span>
+                    </div>
+                </div>
+
+                <!-- TODAY'S GOAL CARD -->
+                <div class="glass-panel p-6 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="font-outfit font-extrabold text-lg text-white tracking-wide mb-4">TODAY'S GOAL</h2>
+
+                        <!-- Radial Gauge Progress -->
+                        <div class="relative w-40 h-40 mx-auto my-2 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                <!-- Background circle -->
+                                <circle cx="50" cy="50" r="40" stroke="#1e293b" stroke-width="9" fill="transparent"/>
+                                <!-- Animated progress arc -->
+                                <circle id="goalGaugeArc" cx="50" cy="50" r="40" stroke="url(#blueSkyGradient)" stroke-width="9" 
+                                        stroke-dasharray="251.2" stroke-dashoffset="37.6" stroke-linecap="round" fill="transparent"
+                                        class="transition-all duration-1000 ease-out glow-cyan" />
+                                <defs>
+                                    <linearGradient id="blueSkyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8" />
+                                        <stop offset="100%" stop-color="#06b6d4" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                <span class="font-outfit font-black text-3xl text-white leading-none" id="goalPercentageText">85%</span>
+                                <span class="text-[10px] font-bold tracking-wider uppercase text-sky-400 mt-1">COMPLETE</span>
+                            </div>
+                        </div>
+
+                        <!-- Goal Checklist Tasks -->
+                        <div class="space-y-2.5 mt-4">
+                            <div class="flex items-center justify-between text-xs font-semibold p-2.5 rounded-xl bg-slate-900/60 border border-sky-500/20">
+                                <div class="flex items-center gap-2 text-slate-200">
+                                    <i class="fa-solid fa-circle-check text-sky-400 text-sm"></i>
+                                    <span>Workout 60 min</span>
+                                </div>
+                                <span class="text-sky-400 text-[11px]">Completed</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs font-semibold p-2.5 rounded-xl bg-slate-900/60 border border-sky-500/20">
+                                <div class="flex items-center gap-2 text-slate-200">
+                                    <i class="fa-solid fa-circle-check text-sky-400 text-sm"></i>
+                                    <span>Burn 600 kcal</span>
+                                </div>
+                                <span class="text-sky-400 text-[11px]">Completed</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs font-semibold p-2.5 rounded-xl bg-slate-900/60 border border-sky-500/20">
+                                <div class="flex items-center gap-2 text-slate-200">
+                                    <i class="fa-solid fa-circle-check text-sky-400 text-sm"></i>
+                                    <span>10,000 Steps</span>
+                                </div>
+                                <span class="text-sky-400 text-[11px]">Completed</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs font-semibold p-2.5 rounded-xl bg-slate-900/60 border border-sky-500/20">
+                                <div class="flex items-center gap-2 text-slate-200">
+                                    <i class="fa-solid fa-circle-check text-sky-400 text-sm"></i>
+                                    <span>Protein 120g</span>
+                                </div>
+                                <span class="text-sky-400 text-[11px]">Completed</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs font-semibold p-2.5 rounded-xl bg-slate-950/40 border border-slate-800 text-slate-400">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-regular fa-circle text-slate-600 text-sm"></i>
+                                    <span>Sleep 7-8 hrs</span>
+                                </div>
+                                <span class="text-slate-500 text-[11px]">In Progress</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs font-bold text-slate-300 text-center mt-3 pt-2 border-t border-slate-800">
+                        Keep going! <span class="text-sky-400">You're doing great.</span>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- SECTION 3: RECOVERY, FITNESS SCORE, AI RECOMMENDATION & BODY FOCUS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- CARD 1: RECOVERY -->
+                <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="font-outfit font-extrabold text-base text-white tracking-wide mb-3">RECOVERY</h2>
+                        
+                        <div class="flex items-center gap-4 mb-4">
+                            <!-- Circular Gauge -->
+                            <div class="relative w-24 h-24 flex-shrink-0 flex items-center justify-center">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="#1e293b" stroke-width="3.5" fill="none" />
+                                    <path id="recoveryArc" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="#38bdf8" stroke-width="3.5" stroke-dasharray="68, 100" stroke-linecap="round" fill="none" class="transition-all duration-700" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                    <span class="font-outfit font-black text-xl text-white" id="recoveryText">68%</span>
+                                    <span class="text-[9px] font-bold text-sky-400">Moderate</span>
+                                </div>
+                            </div>
+
+                            <!-- Progress bars list -->
+                            <div class="flex-1 space-y-2 text-xs">
+                                <div>
+                                    <div class="flex justify-between font-semibold text-slate-300 mb-0.5">
+                                        <span>Sleep Quality</span>
+                                        <span class="font-bold text-white">70%</span>
+                                    </div>
+                                    <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-sky-400 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between font-semibold text-slate-300 mb-0.5">
+                                        <span>Muscle Soreness</span>
+                                        <span class="font-bold text-white">65%</span>
+                                    </div>
+                                    <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-cyan-400 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <div class="flex justify-between font-semibold text-slate-300 mb-0.5">
+                                    <span>Stress Level</span>
+                                    <span class="font-bold text-white">40%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-teal-400 rounded-full" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between font-semibold text-slate-300 mb-0.5">
+                                    <span>HRV Balance</span>
+                                    <span class="font-bold text-white">72%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-sky-500 rounded-full" style="width: 72%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: FITNESS SCORE -->
+                <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="font-outfit font-extrabold text-base text-white tracking-wide mb-3">FITNESS SCORE</h2>
+
+                        <div class="flex items-center gap-4">
+                            <!-- Circular Gauge -->
+                            <div class="relative w-28 h-28 flex-shrink-0 flex items-center justify-center">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="#1e293b" stroke-width="3.5" fill="none" />
+                                    <path id="fitnessScoreArc" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="#38bdf8" stroke-width="3.5" stroke-dasharray="82, 100" stroke-linecap="round" fill="none" class="transition-all duration-700 glow-cyan" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                    <span class="font-outfit font-black text-2xl text-white leading-none">82</span>
+                                    <span class="text-[9px] font-bold text-sky-400">/100</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="font-outfit font-bold text-sm text-sky-400">Great Job!</h3>
+                                <p class="text-xs text-slate-300 font-semibold mt-0.5">You're in top <span class="text-cyan-400 font-bold">20%</span> of users.</p>
+                            </div>
+                        </div>
+
+                        <!-- Mini Trend Canvas -->
+                        <div class="h-12 w-full my-2">
+                            <canvas id="fitnessTrendCanvas" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1 pt-1 border-t border-slate-800">
+                        <i class="fa-solid fa-caret-up"></i>
+                        <span>6 pts vs last week</span>
+                    </div>
+                </div>
+
+                <!-- CARD 3: AI RECOMMENDATION -->
+                <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between bg-gradient-to-br from-slate-900/90 via-sky-950/40 to-slate-900/90 border border-sky-500/30">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="font-outfit font-extrabold text-base text-white tracking-wide">AI RECOMMENDATION</h2>
+                            <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center">
+                                <i class="fa-solid fa-brain text-sm animate-pulse"></i>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-300 leading-relaxed font-medium">
+                            Your body showed high intensity workouts for 3 days in a row. To optimize performance and prevent injury, AI recommends:
+                        </p>
+
+                        <div class="mt-3 p-3 rounded-2xl bg-slate-900/80 border border-sky-500/30 shadow-inner">
+                            <div class="text-[11px] font-bold text-sky-400 uppercase tracking-wider">Action Plan</div>
+                            <div class="font-outfit font-bold text-sm text-white mt-0.5">Increase recovery time</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-3 mt-2">
+                        <button class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-extrabold transition shadow-lg shadow-sky-500/30 active:scale-95">
+                            View Full Plan
+                        </button>
+
+                        <div class="flex items-center gap-1">
+                            <button class="w-7 h-7 rounded-lg bg-slate-800 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:bg-slate-700">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <button class="w-7 h-7 rounded-lg bg-slate-800 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:bg-slate-700">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 4: BODY ANATOMY FOCUS SCANNER -->
+                <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="font-outfit font-extrabold text-base text-white tracking-wide mb-2">BODY FOCUS</h2>
+                        
+                        <div class="grid grid-cols-2 gap-2 items-center">
+                            <!-- Human Front Silhouette SVG -->
+                            <div class="relative h-36 flex items-center justify-center bg-slate-900/60 rounded-2xl border border-sky-500/20 p-1">
+                                <svg class="h-full w-auto" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Head & Body outline -->
+                                    <circle cx="50" cy="22" r="14" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                                    <path d="M30 42 C 30 40, 70 40, 70 42 L 78 85 L 68 85 L 66 120 L 70 190 L 54 190 L 50 130 L 46 190 L 30 190 L 34 120 L 32 85 L 22 85 Z" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                                    <!-- Chest & Abs -->
+                                    <path d="M36 45 Q 50 48 64 45 L 62 70 Q 50 72 38 70 Z" fill="#0f172a" stroke="#38bdf8" stroke-width="1" opacity="0.6"/>
+                                    <!-- Highlighted Lower Body (Quads/Calves) - Glowing Cyan -->
+                                    <path class="muscle-highlight" d="M34 110 L 48 110 L 46 150 L 33 150 Z M 52 110 L 66 110 L 67 150 L 54 150 Z" fill="#38bdf8"/>
+                                    <path class="muscle-highlight" d="M34 155 L 45 155 L 43 185 L 34 185 Z M 55 155 L 66 155 L 66 185 L 57 185 Z" fill="#06b6d4"/>
+                                </svg>
+                                <span class="absolute bottom-1 text-[9px] font-bold text-sky-400 uppercase">Front</span>
+                            </div>
+
+                            <!-- Human Back Silhouette SVG -->
+                            <div class="relative h-36 flex items-center justify-center bg-slate-900/60 rounded-2xl border border-sky-500/20 p-1">
+                                <svg class="h-full w-auto" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="22" r="14" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                                    <path d="M30 42 C 30 40, 70 40, 70 42 L 78 85 L 68 85 L 66 120 L 70 190 L 54 190 L 50 130 L 46 190 L 30 190 L 34 120 L 32 85 L 22 85 Z" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                                    <!-- Highlighted Upper Back / Lats - Glowing Cyan -->
+                                    <path class="muscle-highlight" d="M35 45 Q 50 42 65 45 L 63 75 Q 50 82 37 75 Z" fill="#38bdf8"/>
+                                </svg>
+                                <span class="absolute bottom-1 text-[9px] font-bold text-sky-400 uppercase">Back</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 pt-2 border-t border-slate-800 space-y-1.5 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Focus Area</span>
+                            <span class="font-bold text-sky-400 text-[11px]">Lower Body</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Needs Attention</span>
+                            <span class="font-bold text-amber-400 text-[11px]">Upper Back</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Mobile sidebar toggle handler
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            if(mobileBtn && sidebar) {
+                mobileBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('hidden');
+                });
+            }
+
+            // Real-time fluctuating state variables
+            let heartRate = 128;
+            let calories = 645;
+
+            // DOM Elements
+            const elHR = document.getElementById('valHeartRate');
+            const elCal = document.getElementById('valCalories');
+
+            // -------------------------------------------------------------
+            // Helper function to handle HiDPI Canvas crisp sharpness
+            // -------------------------------------------------------------
+            function setupCanvas(canvas) {
+                const dpr = window.devicePixelRatio || 1;
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                const ctx = canvas.getContext('2d');
+                ctx.scale(dpr, dpr);
+                return { ctx, width: rect.width, height: rect.height };
+            }
+
+            // -------------------------------------------------------------
+            // Dynamic Sparkline Graph Renderer for Dark Blue Theme
+            // -------------------------------------------------------------
+            class AnimatedSparkline {
+                constructor(canvasId, lineColor, fillColor, pointsCount = 20) {
+                    this.canvas = document.getElementById(canvasId);
+                    this.lineColor = lineColor;
+                    this.fillColor = fillColor;
+                    this.pointsCount = pointsCount;
+                    this.data = Array.from({ length: pointsCount }, () => Math.random() * 0.5 + 0.25);
+                    this.phase = Math.random() * 10;
+                    this.init();
+                }
+
+                init() {
+                    window.addEventListener('resize', () => this.draw());
+                    this.draw();
+                }
+
+                update() {
+                    this.phase += 0.08;
+                    // Shift line points subtly
+                    for (let i = 0; i < this.pointsCount; i++) {
+                        const offset = Math.sin(this.phase + i * 0.4) * 0.08;
+                        this.data[i] = Math.min(0.9, Math.max(0.1, this.data[i] + offset * 0.2));
+                    }
+                }
+
+                draw() {
+                    if (!this.canvas) return;
+                    const { ctx, width, height } = setupCanvas(this.canvas);
+                    ctx.clearRect(0, 0, width, height);
+
+                    const step = width / (this.pointsCount - 1);
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, height - (this.data[0] * height));
+
+                    for (let i = 0; i < this.pointsCount - 1; i++) {
+                        const x1 = i * step;
+                        const y1 = height - (this.data[i] * height);
+                        const x2 = (i + 1) * step;
+                        const y2 = height - (this.data[i + 1] * height);
+                        const cx = (x1 + x2) / 2;
+                        const cy = (y1 + y2) / 2;
+                        ctx.quadraticCurveTo(x1, y1, cx, cy);
+                    }
+
+                    ctx.lineTo(width, height - (this.data[this.pointsCount - 1] * height));
+
+                    // Stroke with subtle glow effect
+                    ctx.shadowColor = this.lineColor;
+                    ctx.shadowBlur = 8;
+                    ctx.strokeStyle = this.lineColor;
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // Reset shadow
+
+                    // Fill Gradient
+                    ctx.lineTo(width, height);
+                    ctx.lineTo(0, height);
+                    ctx.closePath();
+                    
+                    const grad = ctx.createLinearGradient(0, 0, 0, height);
+                    grad.addColorStop(0, this.fillColor);
+                    grad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+                }
+            }
+
+            // Initialize Sparklines in Dark theme palette
+            const hrSpark = new AnimatedSparkline('canvasHR', '#f43f5e', 'rgba(244, 63, 94, 0.35)');
+            const calSpark = new AnimatedSparkline('canvasCal', '#fbbf24', 'rgba(251, 191, 36, 0.35)');
+            const workSpark = new AnimatedSparkline('canvasWorkout', '#38bdf8', 'rgba(56, 189, 248, 0.35)');
+            const perfSpark = new AnimatedSparkline('canvasPerf', '#818cf8', 'rgba(129, 140, 248, 0.35)');
+
+            // -------------------------------------------------------------
+            // Main Activity Canvas Chart (Combined Neon Wave Line & Bar Chart)
+            // -------------------------------------------------------------
+            class MainActivityChart {
+                constructor(canvasId) {
+                    this.canvas = document.getElementById(canvasId);
+                    this.points = 32;
+                    this.wavePhase = 0;
+                    this.init();
+                }
+
+                init() {
+                    window.addEventListener('resize', () => this.draw());
+                    this.draw();
+                }
+
+                draw() {
+                    if (!this.canvas) return;
+                    const { ctx, width, height } = setupCanvas(this.canvas);
+                    ctx.clearRect(0, 0, width, height);
+
+                    const padding = 20;
+                    const chartW = width - padding * 2;
+                    const chartH = height - padding * 2;
+
+                    // Grid Horizontal Reference Lines
+                    ctx.strokeStyle = 'rgba(30, 41, 59, 0.8)';
+                    ctx.lineWidth = 1;
+                    const gridRows = 4;
+                    for (let i = 0; i <= gridRows; i++) {
+                        const y = padding + (chartH / gridRows) * i;
+                        ctx.beginPath();
+                        ctx.setLineDash([4, 4]);
+                        ctx.moveTo(padding, y);
+                        ctx.lineTo(width - padding, y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+
+                    // Render Animated Bar Chart (Calories Stream)
+                    const barCount = 28;
+                    const barWidth = (chartW / barCount) * 0.45;
+                    const barGap = chartW / barCount;
+
+                    for (let i = 0; i < barCount; i++) {
+                        const x = padding + i * barGap + (barGap - barWidth) / 2;
+                        const valFactor = Math.abs(Math.sin(this.wavePhase * 0.5 + i * 0.3)) * 0.6 + 0.2;
+                        const barH = chartH * valFactor;
+                        const y = padding + chartH - barH;
+
+                        const barGrad = ctx.createLinearGradient(0, y, 0, padding + chartH);
+                        barGrad.addColorStop(0, 'rgba(99, 102, 241, 0.7)');
+                        barGrad.addColorStop(1, 'rgba(15, 23, 42, 0.1)');
+
+                        ctx.fillStyle = barGrad;
+                        ctx.beginPath();
+                        ctx.roundRect(x, y, barWidth, barH, [4, 4, 0, 0]);
+                        ctx.fill();
+                    }
+
+                    // Render Dynamic Curved Wave Line (Heart Rate Stream)
+                    ctx.beginPath();
+                    const linePoints = [];
+                    for (let i = 0; i <= this.points; i++) {
+                        const x = padding + (chartW / this.points) * i;
+                        const wave1 = Math.sin(this.wavePhase + i * 0.3) * 25;
+                        const wave2 = Math.cos(this.wavePhase * 0.7 + i * 0.2) * 15;
+                        const y = padding + chartH * 0.45 + wave1 + wave2;
+                        linePoints.push({ x, y });
+                    }
+
+                    ctx.moveTo(linePoints[0].x, linePoints[0].y);
+                    for (let i = 0; i < linePoints.length - 1; i++) {
+                        const xc = (linePoints[i].x + linePoints[i + 1].x) / 2;
+                        const yc = (linePoints[i].y + linePoints[i + 1].y) / 2;
+                        ctx.quadraticCurveTo(linePoints[i].x, linePoints[i].y, xc, yc);
+                    }
+
+                    // Line Styling with Neon Glow
+                    ctx.shadowColor = 'rgba(56, 189, 248, 0.8)';
+                    ctx.shadowBlur = 12;
+                    ctx.strokeStyle = '#38bdf8';
+                    ctx.lineWidth = 3.5;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // Reset shadow
+
+                    // Gradient Fill below the line
+                    ctx.lineTo(linePoints[linePoints.length - 1].x, padding + chartH);
+                    ctx.lineTo(linePoints[0].x, padding + chartH);
+                    ctx.closePath();
+
+                    const lineGrad = ctx.createLinearGradient(0, padding, 0, padding + chartH);
+                    lineGrad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+                    lineGrad.addColorStop(1, 'rgba(15, 23, 42, 0.05)');
+                    ctx.fillStyle = lineGrad;
+                    ctx.fill();
+
+                    // Glowing Pulsing Data Nodes
+                    const activeIndices = [8, 18, 26];
+                    activeIndices.forEach(idx => {
+                        if (linePoints[idx]) {
+                            const p = linePoints[idx];
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+                            ctx.fillStyle = '#38bdf8';
+                            ctx.shadowColor = '#38bdf8';
+                            ctx.shadowBlur = 10;
+                            ctx.fill();
+                            ctx.strokeStyle = '#ffffff';
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                            ctx.shadowBlur = 0;
+                        }
+                    });
+                }
+
+                update() {
+                    this.wavePhase += 0.03;
+                }
+            }
+
+            const mainChart = new MainActivityChart('mainActivityCanvas');
+
+            // -------------------------------------------------------------
+            // Fitness Score Mini Trend Line Canvas
+            // -------------------------------------------------------------
+            function drawFitnessTrend() {
+                const canvas = document.getElementById('fitnessTrendCanvas');
+                if (!canvas) return;
+                const { ctx, width, height } = setupCanvas(canvas);
+                ctx.clearRect(0, 0, width, height);
+
+                const points = [0.3, 0.4, 0.35, 0.55, 0.5, 0.75, 0.7, 0.88];
+                const step = width / (points.length - 1);
+
+                ctx.beginPath();
+                ctx.moveTo(0, height - points[0] * height);
+
+                for (let i = 0; i < points.length - 1; i++) {
+                    const x1 = i * step;
+                    const y1 = height - points[i] * height;
+                    const x2 = (i + 1) * step;
+                    const y2 = height - points[i + 1] * height;
+                    const cx = (x1 + x2) / 2;
+                    const cy = (y1 + y2) / 2;
+                    ctx.quadraticCurveTo(x1, y1, cx, cy);
+                }
+
+                ctx.shadowColor = 'rgba(56, 189, 248, 0.6)';
+                ctx.shadowBlur = 6;
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+            }
+            drawFitnessTrend();
+            window.addEventListener('resize', drawFitnessTrend);
+
+            // -------------------------------------------------------------
+            // Main Animation & Dynamic Real-time Loop Engine
+            // -------------------------------------------------------------
+            let lastTickerTime = 0;
+
+            function animateLoop(timestamp) {
+                // Smooth graph updates on every frame
+                hrSpark.update();
+                hrSpark.draw();
+
+                calSpark.update();
+                calSpark.draw();
+
+                workSpark.update();
+                workSpark.draw();
+
+                perfSpark.update();
+                perfSpark.draw();
+
+                mainChart.update();
+                mainChart.draw();
+
+                // Periodic real-time value fluctuation (every 1.5 seconds)
+                if (timestamp - lastTickerTime > 1500) {
+                    lastTickerTime = timestamp;
+
+                    // Fluctuate heart rate (+/- 3 BPM)
+                    const hrDelta = (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 3);
+                    heartRate = Math.min(145, Math.max(115, heartRate + hrDelta));
+                    if (elHR) elHR.textContent = heartRate;
+
+                    // Fluctuate calories (+1 kcal periodically)
+                    if (Math.random() > 0.4) {
+                        calories += 1;
+                        if (elCal) elCal.textContent = calories.toLocaleString();
+                    }
+                }
+
+                requestAnimationFrame(animateLoop);
+            }
+
+            // Start Animation Engine
+            requestAnimationFrame(animateLoop);
+        });
+    </script>
+</body>
+</html>
